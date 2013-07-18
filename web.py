@@ -30,14 +30,14 @@ def vote_api(item_id):
 def add_api():
     link = request.form['link']
     try:
-        data = urllib2.urlopen(link).read()
+        data = urllib2.urlopen(link, timeout=2).read()
         title_search = re.search('<title>(.*)</title>', data, re.IGNORECASE)
         title = title_search.group(1)
         item = Item(title, link)
         news.add(item)
     except Exception as e:
         log.debug(e)
-        return jsonify(error="Invalid Link")
+        return jsonify(error="Invalid Link or urlread timeout")
     return redirect(url_for('main'))
 
 @app.route('/new')
