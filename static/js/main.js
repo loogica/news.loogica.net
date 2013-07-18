@@ -25,30 +25,3 @@ function NewsController($scope, $http) {
 
     $scope.moment = moment;
 }
-
-
-// Gumby is ready to go
-Gumby.ready(function() {
-
-
-	// placeholder polyfil
-	if(Gumby.isOldie || Gumby.$dom.find('html').hasClass('ie9')) {
-		$('input, textarea').placeholder();
-	}
-});
-
-// Oldie document loaded
-Gumby.oldie(function() {
-
-});
-
-// Touch devices loaded
-Gumby.touch(function() {
-
-});
-
-// Document ready
-$(function() {
-
-});
-

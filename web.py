@@ -1,3 +1,6 @@
+import re
+import urllib2
+
 from coopy.base import init_persistent_system
 from flask import Flask, request, redirect, render_template, jsonify, url_for
 
@@ -5,10 +8,11 @@ from domain import Item, News
 
 app = Flask(__name__)
 news = init_persistent_system(News('main'))
+TITLE_REGEX = re.compile("<title>.*</title>")
 
 @app.route('/')
 def main():
-    return render_template('loogica-news.html', items=news.items)
+    return render_template('loogica-news.html')
 
 @app.route('/api/news')
 def news_api():
@@ -22,8 +26,14 @@ def vote_api(item_id):
 
 @app.route('/api/post', methods=['POST'])
 def add_api():
-    title = request.form['title']
     link = request.form['link']
+    import ipdb; ipdb.set_trace()
+    try:
+        data = urllib2.urlopen(link).read()
+        title_search = re.search('<title>(.*)</title>', data, re.IGNORECASE)
+        title = title_search.group(1)
+    except Exception as e:
+        return jsonify(error="Invalid Link")
     item = Item(title, link)
     news.add(item)
     return redirect(url_for('main'))

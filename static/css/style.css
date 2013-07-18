@@ -1,8 +1,18 @@
 
-body { color: #333333; background-color: #E6E6E1; }
+body {
+    color: #333333;
+    background-color: #E6E6E1;
+}
 a { color: #666; }
 a:hover { color: #D04526; }
 
+.navbar {
+    border-top: 3px solid #CC0000;
+}
+
+.navbar-search .search-query {
+    border-radius: 6px;
+}
 
 .newsList li {
     color: #999999;
@@ -10,44 +20,35 @@ a:hover { color: #D04526; }
 .newsList h1 {
     color: #333333;
     font-size: 1.2em;
+    line-height: 1.25em;
+    padding-top: 0.5em;
+    padding-bottom: 0;
+    margin-bottom: 0
 }
-.newsList h1 a { color: #333; }
-
-.newsList h1 a:hover  { color: #000; }
-
-.newsList p {
-    font-size: 0.8em;
-    margin-bottom: 0;
+.newsList h1 a {
+    color: #333;
 }
-.newsList p .btn {
-    margin-bottom: 0;
+.newsList h1 a:hover  {
+    color: #000;
 }
 .promote {
     min-width: 6em;
     display: inline-block;
 }
 .rankNumber {
-    min-width: 1.8em;
+    min-width: 2em;
     display: inline-block;
 }
 
-/* Nav Header */
-.navbar {
-    border-top: 3px solid #CC0000;
-    padding-top: 0.6em;
-    min-height: 60px;
-}
-.navbar .logo {
-    color: #999999;
-    font-size: 1.6em;
-    height: 30px;
-    line-height: 28px;
-}
-.navbar ul li {
-    height: 30px;
-    line-height: 30px;
-}
-.navbar ul li > a {
-    height: 30px;
-    line-height: 30px;
-}
+
+/* Large desktop */
+@media (min-width: 1200px) { ... }
+
+/* Portrait tablet to landscape and desktop */
+@media (min-width: 768px) and (max-width: 979px) { ... }
+
+/* Landscape phone to portrait tablet */
+@media (max-width: 767px) { ... }
+
+/* Landscape phones and down */
+@media (max-width: 480px) { ... }
