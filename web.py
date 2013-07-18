@@ -6,9 +6,11 @@ from flask import Flask, request, redirect, render_template, jsonify, url_for
 
 from domain import Item, News
 
+import logging
+log = logging.getLogger(__name__)
+
 app = Flask(__name__)
 news = init_persistent_system(News('main'))
-TITLE_REGEX = re.compile("<title>.*</title>")
 
 @app.route('/')
 def main():
@@ -31,10 +33,11 @@ def add_api():
         data = urllib2.urlopen(link).read()
         title_search = re.search('<title>(.*)</title>', data, re.IGNORECASE)
         title = title_search.group(1)
+        item = Item(title, link)
+        news.add(item)
     except Exception as e:
+        log.debug(e)
         return jsonify(error="Invalid Link")
-    item = Item(title, link)
-    news.add(item)
     return redirect(url_for('main'))
 
 @app.route('/new')
