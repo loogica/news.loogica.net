@@ -27,7 +27,6 @@ def vote_api(item_id):
 @app.route('/api/post', methods=['POST'])
 def add_api():
     link = request.form['link']
-    import ipdb; ipdb.set_trace()
     try:
         data = urllib2.urlopen(link).read()
         title_search = re.search('<title>(.*)</title>', data, re.IGNORECASE)
