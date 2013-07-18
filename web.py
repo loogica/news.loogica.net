@@ -1,7 +1,10 @@
+# -*- coding: utf-8 -*-
 import re
 import urllib2
+from datetime import datetime, timedelta
 
 from coopy.base import init_persistent_system
+from werkzeug.contrib.atom import AtomFeed
 from flask import Flask, request, redirect, render_template, jsonify, url_for
 
 from domain import Item, News
@@ -47,6 +50,20 @@ def new():
 @app.route('/sobre')
 def about():
     return render_template('about.html')
+
+@app.route('/recent.atom')
+def recent_feed():
+    feed = AtomFeed('Loogica News',
+                    feed_url=request.url,
+                    url=request.url_root)
+    items = news.get_items()
+    for item in items:
+        feed.add(title = item['title'].decode('utf-8'),
+                 updated = datetime.strptime(item['posted'],
+                                               '%Y-%m-%d %H:%M:%S'),
+                 url = item['link'])
+
+    return feed.get_response()
 
 application = app
 if __name__ == "__main__":
