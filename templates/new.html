@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block main %}
+{% raw %}
+<div ng-controller="NewsController" class="row">
+  <h2>Envio</h2>
+  <form action="/api/post" method="POST">
+  <ul class="eight columns">
+    <li class="field"><input type="text" class="text input" name="title" placeholder="Título"></li>
+    <li class="field"><input type="text" class="text input" name="link" placeholder="Link"><br></li>
+    <li class="field"><div class="large primary btn"><input type="submit" value="Enviar"></div></li>
+  </ul>
+  </form>
+</div>
+{% endraw %}
+{% endblock %}
+

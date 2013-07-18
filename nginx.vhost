@@ -1,0 +1,14 @@
+server {
+    listen 80;
+    server_name news.loogica.net;
+    client_max_body_size 50M;
+
+    root /opt/apps/news.loogica.net/;
+
+    location / {
+        uwsgi_pass unix:/opt/run/news_loogica_web.sock;
+        include uwsgi_params;
+        #auth_basic	"Restricted";
+        #auth_basic_user_file /opt/apps/loogica.net/htpasswd;
+    }
+}

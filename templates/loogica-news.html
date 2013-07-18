@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block main %}
+{% raw %}
+<div ng-controller="NewsController" class="row">
+  <ol class="newsList">
+    <li ng-repeat="item in news">
+      <h1><a href="{{ item.link }}">{{ item.title }}</a></h1>
+      <p><i class="rankNumber">+{{ item.votes }}</i> <a class="promote" href="#" ng-click="vote(item.id)"><i class="icon-up-open"> Promover</i></a>  
+         <i class="small icon-clock">{{ moment(item.posted).startOf('hour').fromNow() }}</i></p>
+    </li>
+  </ol>
+</div>
+{% endraw %}
+{% endblock %}

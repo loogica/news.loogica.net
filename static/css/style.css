@@ -1,0 +1,53 @@
+
+body { color: #333333; background-color: #E6E6E1; }
+a { color: #666; }
+a:hover { color: #D04526; }
+
+
+.newsList li {
+    color: #999999;
+}
+.newsList h1 {
+    color: #333333;
+    font-size: 1.2em;
+}
+.newsList h1 a { color: #333; }
+
+.newsList h1 a:hover  { color: #000; }
+
+.newsList p {
+    font-size: 0.8em;
+    margin-bottom: 0;
+}
+.newsList p .btn {
+    margin-bottom: 0;
+}
+.promote {
+    min-width: 6em;
+    display: inline-block;
+}
+.rankNumber {
+    min-width: 1.8em;
+    display: inline-block;
+}
+
+/* Nav Header */
+.navbar {
+    border-top: 3px solid #CC0000;
+    padding-top: 0.6em;
+    min-height: 60px;
+}
+.navbar .logo {
+    color: #999999;
+    font-size: 1.6em;
+    height: 30px;
+    line-height: 28px;
+}
+.navbar ul li {
+    height: 30px;
+    line-height: 30px;
+}
+.navbar ul li > a {
+    height: 30px;
+    line-height: 30px;
+}
