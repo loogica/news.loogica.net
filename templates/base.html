@@ -12,6 +12,7 @@
 	<meta name="keywords" content="" />
 	<meta name="author" content="humans.txt">
 
+  <link href="{{ url_for('recent_feed') }}" rel="alternate" title="Loogica News Atom" type="application/atom+xml">
 	<link rel="shortcut icon" href="http://loogica.net/videos/theme/img/favicon.ico" type="image/x-icon" />
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
@@ -44,6 +45,7 @@
 					<ul class="nav">
 						<li><a href="/new">Novo</a></li>
 						<li><a href="/sobre">Sobre</a></li>
+						<li><a href="{{ url_for('recent_feed')}}">RSS</a></li>
 					</ul>
 				</div>
 
