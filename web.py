@@ -29,6 +29,12 @@ def vote_api(item_id):
     news.vote(item_id)
     return jsonify(items=news.get_items())
 
+@app.route('/api/remove/<item_id>')
+def remove_api(item_id):
+    item_id = int(item_id)
+    news.remove(item_id)
+    return jsonify(items=news.get_items())
+
 @app.route('/api/post', methods=['POST'])
 def add_api():
     link = request.form['link']
