@@ -28,6 +28,9 @@ class News(object):
             return found[0]
         raise Exception("Unknow/Removed item")
 
+    def remove(self, item_id):
+        self.items = filter(lambda x: not x['id'] == item_id, self.items)
+
     @readonly
     def get_items(self):
         return sorted(self.items, key=lambda item: item['votes'], reverse=True)
@@ -45,3 +48,17 @@ def test_news():
 
     assert item == news.vote(0)
     assert 1 == news.items[0]['votes']
+
+
+    new_item = Item('New Video', 'http://loogica.net/videos')
+    news.add(new_item)
+    assert 2 == len(news.items)
+
+    assert new_item == news.vote(1)
+    assert 1 == news.items[1]['votes']
+    assert new_item == news.vote(1)
+    assert 2 == news.items[1]['votes']
+
+    news.remove(0)
+    assert 1 == len(news.items)
+    assert 2 == news.items[0]['votes']
