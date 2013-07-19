@@ -39,7 +39,7 @@ def remove_api(item_id):
 def add_api():
     link = request.form['link']
     try:
-        data = urllib2.urlopen(link, timeout=2).read()
+        data = urllib2.urlopen(link, timeout=10).read()
         title_search = re.search('<title>(.*)</title>', data, re.IGNORECASE)
         title = title_search.group(1)
         item = Item(title, link)
@@ -64,10 +64,13 @@ def recent_feed():
                     url=request.url_root)
     items = news.get_items()
     for item in items:
-        feed.add(title = item['title'].decode('utf-8'),
-                 updated = datetime.strptime(item['posted'],
-                                               '%Y-%m-%d %H:%M:%S'),
-                 url = item['link'])
+        try:
+            feed.add(title = item['title'].decode('utf-8'),
+                     updated = datetime.strptime(item['posted'],
+                                                   '%Y-%m-%d %H:%M:%S'),
+                     url = item['link'])
+        except Exception as e:
+            log.debug("ewurror {0} {1}".format(e, item['title'].encode('utf-8')))
 
     return feed.get_response()
 
