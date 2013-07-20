@@ -54,7 +54,7 @@ def add_api(channel):
     link = request.form['link']
     try:
         data = urllib2.urlopen(link, timeout=10).read()
-        title_search = re.search('<title>(\n*.*\n)</title>', data, re.IGNORECASE)
+        title_search = re.search('<title>(\n*.*\n*)</title>', data, re.IGNORECASE)
         title = title_search.group(1)
         item = Item(title, link)
         news = root.news[channel]
