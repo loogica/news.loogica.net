@@ -1,12 +1,13 @@
 function NewsController($scope, $http) {
-    $scope.news = [];
-
     // this should be done dy DI
     $scope.moment = moment;
 
+    $scope.news = [];
+    $scope.channel = channel;
+
     $scope.update = function() {
         $http({
-            url: '/api/news',
+            url: '/api/news/' + $scope.channel,
             method: 'GET'
         }).success(function(data, status, header, config) {
             $scope.news = data.items;
@@ -18,7 +19,7 @@ function NewsController($scope, $http) {
 
     $scope.vote = function(item_id) {
         $http({
-            url: '/api/vote/' + item_id,
+            url: '/api/vote/' + $scope.channel + '/' + item_id,
             method: 'GET'
         }).success(function(data, status, header, config) {
             $scope.news = data.items;
@@ -29,13 +30,18 @@ function NewsController($scope, $http) {
 
     $scope.remove = function(item_id) {
         $http({
-            url: '/api/remove/' + item_id,
+            url: '/api/remove/' + $scope.channel + '/' + item_id,
             method: 'GET'
         }).success(function(data, status, header, config) {
             $scope.news = data.items;
         }).error(function(data, status, header, config) {
             alert('API ERROR');
         });
+    };
+
+    $scope.open = function(channel) {
+        $scope.channel = channel;
+        $scope.update();
     };
 
     $scope.update();

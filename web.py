@@ -7,51 +7,75 @@ from coopy.base import init_persistent_system
 from werkzeug.contrib.atom import AtomFeed
 from flask import Flask, request, redirect, render_template, jsonify, url_for
 
-from domain import Item, News
+from domain import Item, News, Root
 
 import logging
 log = logging.getLogger(__name__)
 
 app = Flask(__name__)
-news = init_persistent_system(News('main'))
+
+root = Root()
+root.add('main', init_persistent_system(News('main')))
+root.add('c', init_persistent_system(News('c')))
+root.add('python', init_persistent_system(News('python')))
+root.add('javascript', init_persistent_system(News('javascript')))
+root.add('mobile', init_persistent_system(News('mobile')))
+root.add('sugestoes', init_persistent_system(News('sugestoes')))
 
 @app.route('/')
 def main():
-    return render_template('loogica-news.html')
+    return redirect('/c/main')
 
-@app.route('/api/news')
-def news_api():
-    return jsonify(items=news.get_items())
+@app.route('/c/<channel>')
+def channel(channel):
+    news = root.news[channel]
+    return render_template('loogica-news.html', channel=channel)
 
-@app.route('/api/vote/<item_id>')
-def vote_api(item_id):
+@app.route('/api/news/<channel>')
+def news_channel_api(channel):
+    try:
+        return jsonify(channel=channel,
+                    items=root.news[channel].get_items())
+    except:
+        return jsonify(msg="Invalid Channel")
+
+@app.route('/api/vote/<channel>/<item_id>')
+def vote_api(item_id, channel):
     item_id = int(item_id)
+    news = root.news[channel]
     news.vote(item_id)
-    return jsonify(items=news.get_items())
+    return jsonify(channel=channel,
+                   items=news.get_items())
 
-@app.route('/api/remove/<item_id>')
-def remove_api(item_id):
+@app.route('/api/remove/<channel>/<item_id>')
+def remove_api(item_id, channel):
     item_id = int(item_id)
+    news = root.news[channel]
     news.remove(item_id)
     return jsonify(items=news.get_items())
 
-@app.route('/api/post', methods=['POST'])
-def add_api():
+@app.route('/api/post/<channel>', methods=['POST'])
+def add_api(channel):
     link = request.form['link']
     try:
         data = urllib2.urlopen(link, timeout=10).read()
         title_search = re.search('<title>(.*)</title>', data, re.IGNORECASE)
         title = title_search.group(1)
         item = Item(title, link)
+        news = root.news[channel]
         news.add(item)
     except Exception as e:
         log.debug(e)
         return jsonify(error="Invalid Link or urlread timeout")
-    return redirect(url_for('main'))
+    return redirect(url_for('channel', channel=channel))
 
 @app.route('/new')
 def new():
-    return render_template('new.html')
+    return redirect('/new/main')
+
+@app.route('/new/<channel>')
+def new_api(channel):
+    return render_template('new.html', channel=channel)
 
 @app.route('/sobre')
 def about():
