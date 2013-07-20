@@ -24,10 +24,12 @@ class News(object):
     def __init__(self, name):
         self.name = name
         self.items = []
+        self.index = 0
 
     def add(self, item):
-        item['id'] = len(self.items)
+        item['id'] = self.index
         self.items.append(item)
+        self.index += 1
 
     def vote(self, item_id):
         found = filter(lambda x: x['id'] == item_id, self.items)
