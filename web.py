@@ -62,7 +62,7 @@ def recent_feed():
     feed = AtomFeed('Loogica News',
                     feed_url=request.url,
                     url=request.url_root)
-    items = news.get_items()
+    items = root.news['main'].get_items()
     for item in items:
         try:
             feed.add(title = item['title'].decode('utf-8'),
