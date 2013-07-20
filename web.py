@@ -16,11 +16,6 @@ app = Flask(__name__)
 
 root = Root()
 root.add('main', init_persistent_system(News('main')))
-root.add('c', init_persistent_system(News('c')))
-root.add('python', init_persistent_system(News('python')))
-root.add('javascript', init_persistent_system(News('javascript')))
-root.add('mobile', init_persistent_system(News('mobile')))
-root.add('sugestoes', init_persistent_system(News('sugestoes')))
 
 @app.route('/')
 def main():

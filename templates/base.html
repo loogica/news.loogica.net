@@ -24,7 +24,11 @@
   <link rel="stylesheet" href="/static/css/bootstrap-responsive.min.css">
   <link rel="stylesheet" href="/static/css/font-awesome.min.css">
   <link rel="stylesheet" href="/static/css/style.css">
+  {% if channel %}
   <script>var channel = "{{ channel }}";</script>
+  {% else %}
+  <script>var channel = "main";</script>
+  {% endif %}
 
 </head>
 
@@ -40,11 +44,9 @@
         <a class="brand" href="/">Loogica News</a>
         <div class="nav-collapse collapse">
           <ul class="nav">
+            {% raw %}
             <li><a href="/new/{{ channel }}">Novo</a></li>
-            <li><a href="/c/c">C</a></li>
-            <li><a href="/c/python">Python</a></li>
-            <li><a href="/c/javascript">Javascript</a></li>
-            <li><a href="/c/sugestoes">Sugestões</a></li>
+            {% endraw %}
             <li><a href="/sobre"><b>Sobre</b></a></li>
             <li><a href="{{ url_for('recent_feed')}}">RSS</a></li>
           </ul>
