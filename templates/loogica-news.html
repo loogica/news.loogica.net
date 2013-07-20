@@ -5,10 +5,8 @@
   <ol class="newsList" ng-show="show_items">
     <li ng-repeat="item in news">
       <h1><a href="{{ item.link }}">{{ item.title }}</a></h1>
-      <p><i class="rankNumber">+{{ item.votes }}</i> 
-         <a class="promote" href="#" ng-click="vote(item.id)"><i class="icon-chevron-up"> Promover</i></a>
-         <i class="icon-time"></i>{{ moment(item.posted).startOf('hour').fromNow() }}  
-         <i class="icon-trash"><a href="#" ng-click="remove(item.id)">apagar</a></i></p>
+      <p><i class="rankNumber">+{{ item.votes }}</i> <a class="promote" href="#" ng-click="vote(item.id)"><i class="icon-chevron-up"> Promover</i></a>
+      <i class="icon-time"></i> {{ moment(item.posted).startOf('hour').fromNow() }}  <i class="icon-trash"><a href="#" ng-click="remove(item.id)"> Apagar</a></i></p>
     </li>
   </ol>
 </div>
