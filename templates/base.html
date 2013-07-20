@@ -1,66 +1,65 @@
 <!doctype html>
 <html lang="en" ng-app>
 <head>
-	<meta charset="utf-8">
+  <meta charset="utf-8">
 
-	<!-- Use the .htaccess and remove these lines to avoid edge case issues.
-			 More info: h5bp.com/b/378 -->
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <!-- Use the .htaccess and remove these lines to avoid edge case issues.
+       More info: h5bp.com/b/378 -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-	<title>Loogica - News</title>
-	<meta name="description" content="" />
-	<meta name="keywords" content="" />
-	<meta name="author" content="humans.txt">
+  <title>Loogica - News</title>
+  <meta name="description" content="" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="humans.txt">
 
   <link href="{{ url_for('recent_feed') }}" rel="alternate" title="Loogica News Atom" type="application/atom+xml">
-	<link rel="shortcut icon" href="http://loogica.net/videos/theme/img/favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="http://loogica.net/videos/theme/img/favicon.ico" type="image/x-icon" />
 
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-	<link rel="stylesheet" href="/static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <style>
       body { padding-top: 45px; }
     </style>
-	<link rel="stylesheet" href="/static/css/bootstrap-responsive.min.css">
-	<link rel="stylesheet" href="/static/css/font-awesome.min.css">
-	<link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/bootstrap-responsive.min.css">
+  <link rel="stylesheet" href="/static/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <script>var channel = "{{ channel }}";</script>
 
 </head>
 
-<body>
-	<div class="navbar navbar-inverse navbar-fixed-top">
-		<div class="navbar-inner">
-
-			<div class="container">
-
-				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-
-				<a class="brand" href="http://news.loogica.net/">Loogica News</a>
-
-				<div class="nav-collapse collapse">
-					<ul class="nav">
-						<li><a href="/new">Novo</a></li>
-						<li><a href="/sobre">Sobre</a></li>
-						<li><a href="{{ url_for('recent_feed')}}">RSS</a></li>
-					</ul>
-				</div>
-
-			</div>
-
-		</div>
-	</div>
+<body ng-controller="NewsController">
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="brand" href="/">Loogica News</a>
+        <div class="nav-collapse collapse">
+          <ul class="nav">
+            <li><a href="/new/{{ channel }}">Novo</a></li>
+            <li><a href="/c/c">C</a></li>
+            <li><a href="/c/python">Python</a></li>
+            <li><a href="/c/javascript">Javascript</a></li>
+            <li><a href="/c/sugestoes">Sugestões</a></li>
+            <li><a href="/sobre"><b>Sobre</b></a></li>
+            <li><a href="{{ url_for('recent_feed')}}">RSS</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 
   {% block main %}{% endblock %}
 
-	<script src="http://code.jquery.com/jquery.js"></script>
+  <script src="http://code.jquery.com/jquery.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
-	<script src="/static/js/bootstrap.min.js"></script>
-	<script src="/static/js/moment.min.js"></script>
-	<script src="/static/js/main.js"></script>
+  <script src="/static/js/bootstrap.min.js"></script>
+  <script src="/static/js/moment.min.js"></script>
+  <script src="/static/js/main.js"></script>
 
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -72,6 +71,6 @@
     ga('send', 'pageview');
   </script>
 
-	</script>
+  </script>
   </body>
 </html>
