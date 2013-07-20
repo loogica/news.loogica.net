@@ -12,6 +12,14 @@ def Item(title, link):
     instance['posted'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     return instance
 
+class Root(object):
+    def __init__(self):
+        self.news = {}
+
+    def add(self, name, instance):
+        self.news[name] = instance
+        return instance
+
 class News(object):
     def __init__(self, name):
         self.name = name
@@ -62,3 +70,7 @@ def test_news():
     news.remove(0)
     assert 1 == len(news.items)
     assert 2 == news.items[0]['votes']
+
+    root = Root()
+    assert news == root.add(news)
+    assert 'main' in root.news

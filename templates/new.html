@@ -1,8 +1,7 @@
 {% extends "base.html" %}
 {% block main %}
-{% raw %}
 <div class="container">
-  <form action="/api/post" method="POST">
+    <form action="/api/post/{{ channel }} " method="POST">
     <fieldset>
       <legend>Novo Item</legend>
       <input type="text" name="link" placeholder="Link">
@@ -10,6 +9,5 @@
     </fieldset>
   </form>
 </div>
-{% endraw %}
 {% endblock %}
 
