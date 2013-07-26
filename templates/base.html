@@ -11,12 +11,9 @@
   <meta name="description" content="" />
   <meta name="keywords" content="" />
   <meta name="author" content="humans.txt">
-
   <link href="{{ url_for('recent_feed') }}" rel="alternate" title="Loogica News Atom" type="application/atom+xml">
   <link rel="shortcut icon" href="http://loogica.net/videos/theme/img/favicon.ico" type="image/x-icon" />
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-
   <link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <style>
       body { padding-top: 45px; }
@@ -24,12 +21,13 @@
   <link rel="stylesheet" href="/static/css/bootstrap-responsive.min.css">
   <link rel="stylesheet" href="/static/css/font-awesome.min.css">
   <link rel="stylesheet" href="/static/css/style.css">
+  <script>
   {% if channel %}
-  <script>var channel = "{{ channel }}";</script>
+  var channel = "{{ channel }}";
   {% else %}
-  <script>var channel = "main";</script>
+  var channel = "main";
   {% endif %}
-
+  </script>
 </head>
 
 <body ng-controller="NewsController">
@@ -61,6 +59,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
   <script src="/static/js/bootstrap.min.js"></script>
   <script src="/static/js/moment.min.js"></script>
+  <script src="/static/js/moment-pt-br.js"></script>
   <script src="/static/js/main.js"></script>
 
   <script>

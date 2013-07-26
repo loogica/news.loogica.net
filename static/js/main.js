@@ -1,5 +1,6 @@
 function NewsController($scope, $http) {
     // this should be done dy DI
+    moment.lang('pt-br');
     $scope.moment = moment;
 
     $scope.news = [];
