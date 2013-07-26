@@ -5,13 +5,21 @@ function NewsController($scope, $http) {
 
     $scope.news = [];
     $scope.channel = channel;
+    $scope._date_sort_flag = true;
+
+    var _process_items = function(items) {
+        _.each(items, function(item) {
+            item.date_posted = moment(item.posted);
+        });
+        return items;
+    };
 
     $scope.update = function() {
         $http({
             url: '/api/news/' + $scope.channel,
             method: 'GET'
         }).success(function(data, status, header, config) {
-            $scope.news = data.items;
+            $scope.news = _process_items(data.items);
             $scope.show_items = true;
         }).error(function(data, status, header, config) {
             alert('API ERROR');
@@ -23,7 +31,7 @@ function NewsController($scope, $http) {
             url: '/api/vote/' + $scope.channel + '/' + item_id,
             method: 'GET'
         }).success(function(data, status, header, config) {
-            $scope.news = data.items;
+            $scope.news = _process_items(data.items);
         }).error(function(data, status, header, config) {
             alert('API ERROR');
         });
@@ -34,10 +42,22 @@ function NewsController($scope, $http) {
             url: '/api/remove/' + $scope.channel + '/' + item_id,
             method: 'GET'
         }).success(function(data, status, header, config) {
-            $scope.news = data.items;
+            $scope.news = _process_items(data.items);
         }).error(function(data, status, header, config) {
             alert('API ERROR');
         });
+    };
+
+    $scope.sort_date = function() {
+         var items = _.sortBy($scope.news, function(element) {
+            return element.date_posted;
+        });
+        if ($scope._date_sort_flag) {
+            $scope.news = items.reverse();
+        } else {
+            $scope.news = items;
+        }
+        $scope._date_sort_flag = !$scope._date_sort_flag;
     };
 
     $scope.open = function(channel) {
