@@ -32,14 +32,14 @@ class News(object):
         self.index += 1
 
     def vote(self, item_id):
-        found = filter(lambda x: x['id'] == item_id, self.items)
+        found = list(filter(lambda x: x['id'] == item_id, self.items))
         if found:
             found[0]['votes'] += 1
             return found[0]
         raise Exception("Unknow/Removed item")
 
     def remove(self, item_id):
-        self.items = filter(lambda x: not x['id'] == item_id, self.items)
+        self.items = list(filter(lambda x: not x['id'] == item_id, self.items))
 
     @readonly
     def get_items(self):
@@ -74,5 +74,5 @@ def test_news():
     assert 2 == news.items[0]['votes']
 
     root = Root()
-    assert news == root.add(news)
+    assert news == root.add('main', news)
     assert 'main' in root.news
