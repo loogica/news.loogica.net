@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
+import six
 import re
-import urllib2
+
+try:
+    from urllib2 import urlopen
+except:
+    from urllib.request import urlopen
+
 from datetime import datetime, timedelta
 
 from coopy.base import init_persistent_system
-from werkzeug.contrib.atom import AtomFeed
 from flask import Flask, request, redirect, render_template, jsonify, url_for
+from werkzeug.contrib.atom import AtomFeed
 
 from domain import Item, News, Root
 
@@ -13,9 +19,13 @@ import logging
 log = logging.getLogger(__name__)
 
 app = Flask(__name__)
+app.logger.addHandler(logging.StreamHandler())
 
 root = Root()
-root.add('main', init_persistent_system(News('main')))
+if six.PY3:
+    root.add('main', init_persistent_system(News('main')))
+else:
+    root.add('main', init_persistent_system(News('main'), basedir="main3"))
 
 @app.route('/')
 def main():
@@ -53,7 +63,9 @@ def remove_api(item_id, channel):
 def add_api(channel):
     link = request.form['link']
     try:
-        data = urllib2.urlopen(link, timeout=10).read()
+        data = urlopen(link, timeout=10).read()
+        if six.PY3:
+            data = data.decode('utf-8')
         title_search = re.search('<title>(\n*.*\n*)</title>', data, re.IGNORECASE)
         title = title_search.group(1)
         item = Item(title, link)
