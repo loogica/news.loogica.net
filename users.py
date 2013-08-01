@@ -1,6 +1,24 @@
 import hashlib
+from flask.ext.login import UserMixin
 
 sha1 = lambda p: hashlib.sha1(p).hexdigest()
+
+class UserWrapper(UserMixin):
+    def __init__(self, name, id, active=True):
+        self.name = name
+        self.id = name
+        self.active = active
+
+    def is_active(self):
+        # Here you should write whatever the code is
+        # that checks the database if your user is active
+        return self.active
+
+    def is_anonymous(self):
+        return False
+
+    def is_authenticated(self):
+        return True
 
 def User(username, password):
     return dict(username=username, password=sha1(password))

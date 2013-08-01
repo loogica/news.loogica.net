@@ -45,6 +45,12 @@
             {% raw %}
             <li><a href="/new/{{ channel }}">Novo</a></li>
             {% endraw %}
+            {% if auth %}
+            <li><a href="/logout"><b>Logout</b></a></li>
+            {% else %}
+            <li><a href="/user/new"><b>Criar Conta</b></a></li>
+            <li><a href="/user/login"><b>Login</b></a></li>
+            {% endif %}
             <li><a href="/sobre"><b>Sobre</b></a></li>
             <li><a href="{{ url_for('recent_feed')}}">RSS</a></li>
           </ul>

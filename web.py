@@ -10,22 +10,44 @@ except:
 from datetime import datetime, timedelta
 
 from coopy.base import init_persistent_system
-from flask import Flask, request, redirect, render_template, jsonify, url_for
+from flask import (Flask, request, redirect, render_template, jsonify, session,
+                   url_for)
+from flask.ext.login import LoginManager, login_user, logout_user
 from werkzeug.contrib.atom import AtomFeed
 
+from decouple import Config
+
 from domain import Item, News, Root
+from users import User, Realm, UserWrapper
 
 import logging
 log = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.logger.addHandler(logging.StreamHandler())
+login_manager = LoginManager()
+login_manager.session_protection = "strong"
+login_manager.init_app(app)
+config = Config('settings.ini')
 
 root = Root()
+users = None
 if six.PY3:
     root.add('main', init_persistent_system(News('main')))
+    users = init_persistent_system(Realm('users'))
 else:
     root.add('main', init_persistent_system(News('main'), basedir="main3"))
+    users = init_persistent_system(Realm('users3'))
+
+
+
+@login_manager.user_loader
+def load_user(userid):
+    user = users.users[userid]
+    return UserWrapper(userid, userid, active=True)
+
+def authenticate(username, password):
+    return users.authenticate(username, password)
 
 @app.route('/')
 def main():
@@ -34,7 +56,9 @@ def main():
 @app.route('/c/<channel>')
 def channel(channel):
     news = root.news[channel]
-    return render_template('loogica-news.html', channel=channel)
+    auth = 'user_id' in session
+    return render_template('loogica-news.html', channel=channel,
+                                                auth=auth)
 
 @app.route('/api/news/<channel>')
 def news_channel_api(channel):
@@ -76,6 +100,38 @@ def add_api(channel):
         return jsonify(error="Invalid Link or urlread timeout")
     return redirect(url_for('channel', channel=channel))
 
+@app.route('/user/new')
+def user_form():
+    post_url = '/user/create'
+    return render_template('user.new.html', post_url=post_url)
+
+@app.route('/user/login')
+def login_form():
+    post_url = '/login'
+    return render_template('user.new.html', post_url=post_url)
+
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.form['username']
+    password = request.form['password']
+    if authenticate(username, password):
+        login_user(load_user(username))
+    return redirect('/')
+
+@app.route('/user/create', methods=['POST'])
+def user_create():
+    username = request.form['username']
+    password = request.form['password']
+    if username and password:
+        users.add_user(User(username, password))
+        login_user(load_user(username))
+    return redirect('/')
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect('/')
+
 @app.route('/new')
 def new():
     return redirect('/new/main')
@@ -105,6 +161,7 @@ def recent_feed():
 
     return feed.get_response()
 
+app.secret_key = config('SECRET_KEY')
 application = app
 if __name__ == "__main__":
     app.run(debug=True)

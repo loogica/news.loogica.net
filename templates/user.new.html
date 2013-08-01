@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block main %}
+<div class="container">
+    <form action="{{ post_url }}" method="POST">
+    <fieldset>
+      <legend>Username</legend>
+      <input type="text" name="username" placeholder="Username">
+      <legend>Password</legend>
+      <input type="password" name="password" placeholder="password">
+      <button type="submit" class="btn">Submit</button>
+    </fieldset>
+  </form>
+</div>
+{% endblock %}
+
