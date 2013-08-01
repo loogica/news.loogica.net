@@ -41,15 +41,3 @@ class Realm(object):
         if realm_user['password'] == sha1(password):
             return True
         return False
-
-def test_user():
-    user = User("tester", "testerpass")
-    assert user
-    assert user['username'] == 'tester'
-
-    realm = Realm('test')
-    assert 0 == len(realm.users)
-
-    realm.add_user(user)
-    assert 1 == len(realm.users)
-    assert True == realm.authenticate('tester', 'testerpass')
