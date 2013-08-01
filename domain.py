@@ -2,14 +2,16 @@ from coopy.decorators import readonly
 from datetime import datetime, timedelta
 
 SLICE = timedelta(minutes=30)
+DATE_FORMAT = '%Y-%m-%d %H:%M:%S %f'
 
-def Item(title, link):
+def Item(title, link, owner=None):
     instance = {}
     instance['id'] = None
     instance['title'] = title
     instance['link'] = link
     instance['votes'] = 0
-    instance['posted'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    instance['posted'] = datetime.now().strftime(DATE_FORMAT)
+    instance['owner'] = owner
     return instance
 
 class Root(object):
@@ -43,5 +45,10 @@ class News(object):
 
     @readonly
     def get_items(self):
-        return sorted(self.items, key=lambda item: item['votes'], reverse=True)
+        return sorted(self.items, key=lambda item: item['votes'], reverse=True)[:10]
+
+    @readonly
+    def get_user_items(self, user_id):
+        return sorted(filter(lambda x: x['owner'] == user_id, self.items),
+                      key=lambda item: datetime.strptime(item['posted'], DATE_FORMAT))
 
