@@ -2,14 +2,18 @@ import os
 import shutil
 import unittest
 
-import web
 
 class NewsView(unittest.TestCase):
     def setUp(self):
+        import web
+        reload(web)
         self.app = web.app.test_client()
 
     def tearDown(self):
-        pass
+        try:
+            shutil.rmtree('main')
+        except:
+            pass
 
     def login(self, username, password):
         return self.app.post('/login', data=dict(username=username,
@@ -52,3 +56,37 @@ class NewsView(unittest.TestCase):
         response = self.app.get('/api/vote/main/0')
         assert '"votes": 1' in response.data
 
+    def test_get_remove_api(self):
+        data = dict(link="http://loogica.net")
+        response = self.app.post('/api/post/main', data=data, follow_redirects=True)
+        response = self.app.get('/api/news/main')
+        assert 'Iniciativa Livre' in response.data
+        response = self.app.get('/api/remove/main/0')
+        assert not 'Iniciativa Livre' in response.data
+
+    def test_get_user_form(self):
+        response = self.app.get('/user/new')
+        assert '/user/create' in response.data
+
+    def test_get_login_form(self):
+        response = self.app.get('/user/login')
+        assert '/login' in response.data
+
+    def test_post_user_create(self):
+        data = dict(username="user", password="pass")
+        response = self.app.post('/user/create', data=data, follow_redirects=True)
+        assert 'Logout' in response.data
+
+    def test_post_login(self):
+        data = dict(username="user", password="pass")
+        response = self.app.post('/user/create', data=data, follow_redirects=True)
+        response = self.app.post('/login', data=data, follow_redirects=True)
+        assert 'Logout' in response.data
+
+    def test_post_logout(self):
+        data = dict(username="user", password="pass")
+        response = self.app.post('/user/create', data=data, follow_redirects=True)
+        response = self.app.post('/login', data=data, follow_redirects=True)
+        assert 'Logout' in response.data
+        response = self.app.get('/logout', follow_redirects=True)
+        assert 'Login' in response.data
