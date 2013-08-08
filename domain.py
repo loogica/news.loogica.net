@@ -22,7 +22,7 @@ class Root(object):
         self.news[name] = instance
         return instance
 
-class News(object):
+class List(object):
     def __init__(self, name):
         self.name = name
         self.items = []

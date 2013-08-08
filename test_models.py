@@ -1,12 +1,12 @@
 from datetime import datetime
 
-from domain import Item, News, Root, DATE_FORMAT
+from domain import Item, List, Root, DATE_FORMAT
 from users import User, Realm
 
 def test_news():
     import pytest
     item = Item('Loogica News', 'http://news.loogica.net')
-    news = News('main')
+    news = List('main')
 
     news.add(item)
     assert 1 == len(news.items)

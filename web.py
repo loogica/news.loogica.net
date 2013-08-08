@@ -17,7 +17,7 @@ from werkzeug.contrib.atom import AtomFeed
 
 from decouple import Config
 
-from domain import Item, News, Root
+from domain import Item, List, Root
 from users import User, Realm, UserWrapper
 
 import logging
@@ -34,10 +34,10 @@ login_manager.init_app(app)
 root = Root()
 users = None
 if six.PY3:
-    root.add('main', init_persistent_system(News('main3'), basedir="main3"))
+    root.add('main', init_persistent_system(List('main3'), basedir="main3"))
     users = init_persistent_system(Realm('users'))
 else:
-    root.add('main', init_persistent_system(News('main'), basedir="main"))
+    root.add('main', init_persistent_system(List('main'), basedir="main"))
     users = init_persistent_system(Realm('users3'))
 
 
