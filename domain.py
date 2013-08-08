@@ -1,8 +1,10 @@
+import pytz
+
 from coopy.decorators import readonly
 from datetime import datetime, timedelta
 
 SLICE = timedelta(minutes=30)
-DATE_FORMAT = '%Y-%m-%d %H:%M:%S %f'
+DATE_FORMAT = '%Y-%m-%d %H:%M:%S %f %Z'
 
 def make_url_item(title, link, owner=None):
     item = {
@@ -24,7 +26,8 @@ def make_item(title, item, owner=None):
     instance['title'] = title
     instance['item'] = item
     instance['votes'] = 0
-    instance['posted'] = datetime.now().strftime(DATE_FORMAT)
+    utc_date = pytz.utc.localize(datetime.now())
+    instance['posted'] = utc_date.strftime(DATE_FORMAT)
     instance['owner'] = owner
     return instance
 
