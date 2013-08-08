@@ -17,7 +17,7 @@ from werkzeug.contrib.atom import AtomFeed
 
 from decouple import Config
 
-from domain import Item, List, Root
+from domain import make_url_item, List, Root
 from users import User, Realm, UserWrapper
 
 import logging
@@ -93,7 +93,7 @@ def add_api(channel):
             data = data.decode('utf-8')
         title_search = re.search('<title>(\n*.*\n*)</title>', data, re.IGNORECASE)
         title = title_search.group(1)
-        item = Item(title, link)
+        item = make_url_item(title, link)
         news = root.news[channel]
         news.add(item)
     except Exception as e:

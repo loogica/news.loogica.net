@@ -1,11 +1,11 @@
 from datetime import datetime
 
-from domain import Item, List, Root, DATE_FORMAT
+from domain import make_url_item, List, Root, DATE_FORMAT
 from users import User, Realm
 
 def test_news():
     import pytest
-    item = Item('Loogica News', 'http://news.loogica.net')
+    item = make_url_item('Loogica News', 'http://news.loogica.net')
     news = List('main')
 
     news.add(item)
@@ -17,7 +17,7 @@ def test_news():
     assert item == news.vote(0)
     assert 1 == news.items[0]['votes']
 
-    new_item = Item('New Video', 'http://loogica.net/videos', owner='tester')
+    new_item = make_url_item('New Video', 'http://loogica.net/videos', owner='tester')
     news.add(new_item)
     assert 2 == len(news.items)
     assert None == news.items[0]['owner']
@@ -33,12 +33,12 @@ def test_news():
     assert 2 == news.items[0]['votes']
 
     for i in range(20):
-        new_item = Item('New Video', 'http://loogica.net/videos')
+        new_item = make_url_item('New Video', 'http://loogica.net/videos')
         news.add(new_item)
 
     assert 10 == len(news.get_items())
 
-    new_item = Item('New Video', 'http://loogica.net/videos', owner='tester')
+    new_item = make_url_item('New Video', 'http://loogica.net/videos', owner='tester')
     news.add(new_item)
 
     user_data = news.get_user_items('tester')

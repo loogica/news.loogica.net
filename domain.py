@@ -4,11 +4,25 @@ from datetime import datetime, timedelta
 SLICE = timedelta(minutes=30)
 DATE_FORMAT = '%Y-%m-%d %H:%M:%S %f'
 
-def Item(title, link, owner=None):
+def make_url_item(title, link, owner=None):
+    item = {
+        'title': title,
+        'url': link
+    }
+    return make_item(title, item, owner=owner)
+
+def make_text_item(title, text):
+    item = {
+        'text': text,
+        'title': title
+    }
+    return make_item(title, item, owner=owner)
+
+def make_item(title, item, owner=None):
     instance = {}
     instance['id'] = None
     instance['title'] = title
-    instance['link'] = link
+    instance['item'] = item
     instance['votes'] = 0
     instance['posted'] = datetime.now().strftime(DATE_FORMAT)
     instance['owner'] = owner
