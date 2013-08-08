@@ -90,3 +90,9 @@ class NewsView(unittest.TestCase):
         assert 'Logout' in response.data
         response = self.app.get('/logout', follow_redirects=True)
         assert 'Login' in response.data
+
+    def test_feed(self):
+        data = dict(link="http://loogica.net")
+        response = self.app.post('/api/post/main', data=data, follow_redirects=True)
+        response = self.app.get('/recent/main/atom')
+        assert 'Loogica' in response.data

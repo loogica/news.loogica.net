@@ -17,7 +17,7 @@ from werkzeug.contrib.atom import AtomFeed
 
 from decouple import Config
 
-from domain import make_url_item, List, Root
+from domain import make_url_item, List, Root, DATE_FORMAT
 from users import User, Realm, UserWrapper
 
 import logging
@@ -145,20 +145,19 @@ def new_api(channel):
 def about():
     return render_template('about.html')
 
-@app.route('/recent.atom')
-def recent_feed():
+@app.route('/recent/<channel>/atom')
+def recent_feed(channel):
     feed = AtomFeed('Loogica News',
                     feed_url=request.url,
                     url=request.url_root)
-    items = root.news['main'].get_items()
+    items = root.news[channel].get_items()
     for item in items:
         try:
             feed.add(title = item['title'].decode('utf-8'),
-                     updated = datetime.strptime(item['posted'],
-                                                   '%Y-%m-%d %H:%M:%S'),
-                     url = item['link'])
+                     updated = datetime.strptime(item['posted'], DATE_FORMAT),
+                     url = item['item']['url'])
         except Exception as e:
-            log.debug("ewurror {0} {1}".format(e, item['title'].encode('utf-8')))
+            log.debug("Error {0} {1}".format(e, item['title'].encode('utf-8')))
 
     return feed.get_response()
 

@@ -11,7 +11,7 @@
   <meta name="description" content="" />
   <meta name="keywords" content="" />
   <meta name="author" content="humans.txt">
-  <link href="{{ url_for('recent_feed') }}" rel="alternate" title="Loogica News Atom" type="application/atom+xml">
+  <link href="{{ url_for('recent_feed', channel=channel) }}" rel="alternate" title="Loogica News Atom" type="application/atom+xml">
   <link rel="shortcut icon" href="http://loogica.net/videos/theme/img/favicon.ico" type="image/x-icon" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
   <link rel="stylesheet" href="/static/css/bootstrap.min.css">
@@ -52,7 +52,7 @@
             <li><a href="/user/login"><b>Login</b></a></li>
             {% endif %}
             <li><a href="/sobre"><b>Sobre</b></a></li>
-            <li><a href="{{ url_for('recent_feed')}}">RSS</a></li>
+            <li><a href="{{ url_for('recent_feed', channel=channel)}}">RSS</a></li>
           </ul>
         </div>
       </div>
