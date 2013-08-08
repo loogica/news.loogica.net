@@ -20,8 +20,10 @@ class UserWrapper(UserMixin):
     def is_authenticated(self):
         return True
 
-def User(username, password):
-    return dict(username=username, password=sha1(password))
+def User(username, password, profile={}):
+    return dict(username=username,
+                password=sha1(password),
+                profile=profile)
 
 class Realm(object):
     def __init__(self, name):

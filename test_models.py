@@ -54,7 +54,8 @@ def test_news():
 def test_user():
     user = User("tester", "testerpass")
     assert user
-    assert user['username'] == 'tester'
+    assert 'tester' == user['username']
+    assert {} == user['profile']
 
     realm = Realm('test')
     assert 0 == len(realm.users)
