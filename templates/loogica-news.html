@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block main %}
 {% raw %}
-<div class="container" ng-cloak ng-show="show_items">
+<div class="container" style="display:none;" ng-cloak ng-show="show_items">
   <ol class="newsList" ng-show="show_items">
     <li ng-repeat="info in news">
       <h1><a href="{{ info.item.url }}">{{ info.item.title }}</a></h1>
