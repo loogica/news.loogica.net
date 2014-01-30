@@ -49,7 +49,7 @@ def test_news():
 
     root = Tree()
     assert news == root.add('main', news)
-    assert 'main' in root.news
+    assert 'main' in root.items
 
 def test_news_comments():
     item = make_url_item('Loogica News', 'http://news.loogica.net')
@@ -81,14 +81,25 @@ def test_user():
 def test_tree():
     root = Tree('root')
 
-    assert 0 == len(root.news)
+    assert 0 == len(root.children)
     assert 'root' == root.name
 
-    root.add('main', Tree('main'))
-    assert 1 == len(root.news)
+    main = List('main')
+    root.add('main', main)
+    assert 1 == len(root.children)
+    assert main == root.get('main').items
 
-    root.add('main/specific', Tree('specific'))
-    assert 1 == len(root.news)
-    assert 1 == len(root.news['main'].news)
-    assert Tree('specific') == root.news['main'].news['specific']
+    specific = List('specific')
+    root.add('main/specific', specific)
+    assert 1 == len(root.children)
+    assert 1 == len(root.children['main'].children)
+    assert specific == root.get('main/specific').items
+
+    assert Tree('specific') == root.children['main'].children['specific']
     assert Tree('specific') == root.get('main/specific')
+
+    items = List('sub')
+    root.add('main/specific/sub', items)
+    assert items == root.get('main/specific/sub').items
+
+

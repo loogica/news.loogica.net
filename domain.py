@@ -35,20 +35,23 @@ def make_item(title, item, owner=None):
 class Tree(object):
     def __init__(self, name=None):
         self.name = name
-        self.news = {}
+        self.children = {}
+        self.items = None
 
     def add(self, full_path, instance):
         path = full_path.split('/')
         name = path[0]
 
         if len(path) == 1:
-            self.news[name] = instance
+            tree = Tree(name)
+            self.children[name] = tree
+            tree.items = instance
             return instance
         else:
-            if not name in self.news:
-                self.news[name] = Tree(name)
-            else:
-                tree = self.news[name]
+            if not name in self.children:
+                self.children[name] = Tree(name)
+
+            tree = self.children[name]
             tree.add(full_path.replace("{}/".format(name), ""), instance)
             return
 
@@ -59,9 +62,9 @@ class Tree(object):
         name = path[0]
 
         if len(path) == 1:
-            return self.news[name]
+            return self.children[name]
         else:
-            tree = self.news[name]
+            tree = self.children[name]
             return tree.get(full_path.replace("{}/".format(name), ""))
 
     def __eq__(self, other):
@@ -110,3 +113,5 @@ class List(object):
         return sorted(filter(lambda x: x['owner'] == user_id, self.items),
                       key=lambda item: datetime.strptime(item['posted'], DATE_FORMAT))
 
+    def __len__(self):
+        return len(self.items)
