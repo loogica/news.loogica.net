@@ -56,7 +56,7 @@ def main():
 
 @app.route('/c/<channel>')
 def channel(channel):
-    news = root.news[channel]
+    news = root.get(channel)
     auth = 'user_id' in session
     return render_template('loogica-news.html', channel=channel,
                                                 auth=auth)
@@ -72,7 +72,7 @@ def news_channel_api(channel):
 @app.route('/api/vote/<channel>/<item_id>')
 def vote_api(item_id, channel):
     item_id = int(item_id)
-    news = root.news[channel]
+    news = root.get(channel)
     news.vote(item_id)
     return jsonify(channel=channel,
                    items=news.get_items())
@@ -80,7 +80,7 @@ def vote_api(item_id, channel):
 @app.route('/api/remove/<channel>/<item_id>')
 def remove_api(item_id, channel):
     item_id = int(item_id)
-    news = root.news[channel]
+    news = root.get(channel)
     news.remove(item_id)
     return jsonify(items=news.get_items())
 
@@ -94,7 +94,7 @@ def add_api(channel):
         title_search = re.search('<title>(\n*.*\n*)</title>', data, re.IGNORECASE)
         title = title_search.group(1)
         item = make_url_item(title, link)
-        news = root.news[channel]
+        news = root.get(channel)
         news.add(item)
     except Exception as e:
         log.debug(e)
@@ -150,7 +150,7 @@ def recent_feed(channel):
     feed = AtomFeed('Loogica News',
                     feed_url=request.url,
                     url=request.url_root)
-    items = root.news[channel].get_items()
+    items = root.get(channel).get_items()
     for item in items:
         try:
             feed.add(title = item['title'].decode('utf-8'),
