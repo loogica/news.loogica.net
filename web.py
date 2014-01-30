@@ -17,7 +17,7 @@ from werkzeug.contrib.atom import AtomFeed
 
 from decouple import Config
 
-from domain import make_url_item, List, Root, DATE_FORMAT
+from domain import make_url_item, List, Tree, DATE_FORMAT
 from users import User, Realm, UserWrapper
 
 import logging
@@ -31,7 +31,7 @@ login_manager = LoginManager()
 login_manager.session_protection = "strong"
 login_manager.init_app(app)
 
-root = Root()
+root = Tree()
 users = None
 if six.PY3:
     root.add('main', init_persistent_system(List('main3'), basedir="main3"))

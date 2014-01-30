@@ -31,13 +31,41 @@ def make_item(title, item, owner=None):
     instance['owner'] = owner
     return instance
 
-class Root(object):
-    def __init__(self):
+class Tree(object):
+    def __init__(self, name=None):
+        self.name = name
         self.news = {}
 
-    def add(self, name, instance):
-        self.news[name] = instance
+    def add(self, full_path, instance):
+        path = full_path.split('/')
+        name = path[0]
+
+        if len(path) == 1:
+            self.news[name] = instance
+            return instance
+        else:
+            if not name in self.news:
+                self.news[name] = Tree(name)
+            else:
+                tree = self.news[name]
+            tree.add(full_path.replace("{}/".format(name), ""), instance)
+            return
+
         return instance
+
+    def get(self, full_path):
+        path = full_path.split('/')
+        name = path[0]
+
+        if len(path) == 1:
+            return self.news[name]
+        else:
+            tree = self.news[name]
+            return tree.get(full_path.replace("{}/".format(name), ""))
+
+    def __eq__(self, other):
+        return self.name == other.name
+
 
 class List(object):
     def __init__(self, name):
@@ -59,6 +87,10 @@ class List(object):
 
     def remove(self, item_id):
         self.items = list(filter(lambda x: not x['id'] == item_id, self.items))
+
+    def add_comment(self, item_id, user_id, comment):
+        #comment = dict(user=)
+        pass
 
     @readonly
     def get_items(self):

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from domain import make_url_item, List, Root, DATE_FORMAT
+from domain import make_url_item, List, Tree, DATE_FORMAT
 from users import User, Realm
 
 def test_news():
@@ -47,7 +47,7 @@ def test_news():
     d2 = datetime.strptime(user_data[1]['posted'], DATE_FORMAT)
     assert d1 < d2
 
-    root = Root()
+    root = Tree()
     assert news == root.add('main', news)
     assert 'main' in root.news
 
@@ -63,3 +63,18 @@ def test_user():
     realm.add_user(user)
     assert 1 == len(realm.users)
     assert True == realm.authenticate('tester', 'testerpass')
+
+def test_tree():
+    root = Tree('root')
+
+    assert 0 == len(root.news)
+    assert 'root' == root.name
+
+    root.add('main', Tree('main'))
+    assert 1 == len(root.news)
+
+    root.add('main/specific', Tree('specific'))
+    assert 1 == len(root.news)
+    assert 1 == len(root.news['main'].news)
+    assert Tree('specific') == root.news['main'].news['specific']
+    assert Tree('specific') == root.get('main/specific')
