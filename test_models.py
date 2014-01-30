@@ -51,6 +51,20 @@ def test_news():
     assert news == root.add('main', news)
     assert 'main' in root.news
 
+def test_news_comments():
+    item = make_url_item('Loogica News', 'http://news.loogica.net')
+    news = List('main')
+
+    news.add(item)
+    assert 1 == len(news.items)
+    assert 0 == len(news.items[0]['comments'])
+
+    news.add_comment(0, 1, 'positive comment')
+    assert 1 == len(news.items[0]['comments'])
+
+    news.del_comment(0, 0)
+    assert 0 == len(news.items[0]['comments'])
+
 def test_user():
     user = User("tester", "testerpass")
     assert user

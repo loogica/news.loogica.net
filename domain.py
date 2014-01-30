@@ -29,6 +29,7 @@ def make_item(title, item, owner=None):
     utc_date = pytz.utc.localize(datetime.now())
     instance['posted'] = utc_date.strftime(DATE_FORMAT)
     instance['owner'] = owner
+    instance['comments'] = []
     return instance
 
 class Tree(object):
@@ -88,9 +89,17 @@ class List(object):
     def remove(self, item_id):
         self.items = list(filter(lambda x: not x['id'] == item_id, self.items))
 
-    def add_comment(self, item_id, user_id, comment):
-        #comment = dict(user=)
-        pass
+    def add_comment(self, item_id, user_id, content):
+        found = list(filter(lambda x: x['id'] == item_id, self.items))[0]
+        comment = dict(id=len(found['comments']),user=user_id, content=content)
+        found['comments'].append(comment)
+        return comment
+
+    def del_comment(self, item_id, comment_id):
+        found = list(filter(lambda x: x['id'] == item_id, self.items))[0]
+        comment = list(filter(lambda x: x['id'] == comment_id, found['comments']))[0]
+        found['comments'].remove(comment)
+        return comment
 
     @readonly
     def get_items(self):
