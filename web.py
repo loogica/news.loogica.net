@@ -17,7 +17,7 @@ from werkzeug.contrib.atom import AtomFeed
 
 from decouple import Config
 
-from domain import make_url_item, List, Tree, DATE_FORMAT
+from domain import make_text_item, List, Tree, DATE_FORMAT
 from users import User, Realm, UserWrapper
 
 import logging
@@ -31,14 +31,15 @@ login_manager = LoginManager()
 login_manager.session_protection = "strong"
 login_manager.init_app(app)
 
-root = Tree()
 users = None
 if six.PY3:
-    root.add('main', init_persistent_system(List('main3'), basedir="main3"))
-    users = init_persistent_system(Realm('users'))
-else:
-    root.add('main', init_persistent_system(List('main'), basedir="main"))
+    root = init_persistent_system(Tree(), basedir="main3")
+    root.add('main', List('main3'))
     users = init_persistent_system(Realm('users3'))
+else:
+    root = init_persistent_system(Tree(), basedir="main")
+    root.add('main', List('main'))
+    users = init_persistent_system(Realm('users'))
 
 
 
@@ -54,47 +55,74 @@ def authenticate(username, password):
 def main():
     return redirect('/c/main')
 
-@app.route('/c/<channel>')
+@app.route('/c/<path:channel>')
 def channel(channel):
     news = root.get(channel)
     auth = 'user_id' in session
     return render_template('loogica-news.html', channel=channel,
                                                 auth=auth)
 
-@app.route('/api/news/<channel>')
+@app.route('/item/<path:channel>/<int:pk>')
+def item(channel, pk):
+    news = root.get(channel).items
+    item = news.find(pk)
+    auth = 'user_id' in session
+    return render_template('loogica-item.html', item=pk,
+                                                channel=channel,
+                                                auth=auth)
+
+@app.route('/api/news/<path:channel>')
 def news_channel_api(channel):
     try:
         return jsonify(channel=channel,
-                    items=root.news[channel].get_items())
-    except:
+                       items=root.get(channel).items.get_items())
+    except Exception as e:
+        log.error(e)
         return jsonify(msg="Invalid Channel")
 
-@app.route('/api/vote/<channel>/<item_id>')
+@app.route('/api/<path:channel>/<int:pk>')
+def item_api(channel, pk):
+    news = root.get(channel).items
+    item = news.find(pk)
+    return jsonify(item=item)
+
+
+@app.route('/api/vote/<path:channel>/<item_id>')
 def vote_api(item_id, channel):
     item_id = int(item_id)
-    news = root.get(channel)
+    news = root.get(channel).items
     news.vote(item_id)
     return jsonify(channel=channel,
                    items=news.get_items())
 
-@app.route('/api/remove/<channel>/<item_id>')
+@app.route('/api/remove/<path:channel>/<item_id>')
 def remove_api(item_id, channel):
     item_id = int(item_id)
-    news = root.get(channel)
+    news = root.get(channel).items
     news.remove(item_id)
     return jsonify(items=news.get_items())
 
-@app.route('/api/post/<channel>', methods=['POST'])
+@app.route('/api/channel/add/<path:channel>')
+def add_channel(channel):
+    name = channel.split('/')[-1]
+    root.add(channel, List(name))
+    return jsonify(path=channel, name=name)
+
+
+@app.route('/api/post/<path:channel>', methods=['POST'])
 def add_api(channel):
-    link = request.form['link']
+    #import pytest; pytest.set_trace()
+    #import ipdb; ipdb.set_trace()
+    title = request.form['title']
+    text = request.form['text']
     try:
-        data = urlopen(link, timeout=10).read()
-        if six.PY3:
-            data = data.decode('utf-8')
-        title_search = re.search('<title>(\n*.*\n*)</title>', data, re.IGNORECASE)
-        title = title_search.group(1)
-        item = make_url_item(title, link)
-        news = root.get(channel)
+        #data = urlopen(link, timeout=10).read()
+        #if six.PY3:
+        #    data = data.decode('utf-8')
+        #title_search = re.search('<title>(\n*.*\n*)</title>', data, re.IGNORECASE)
+        #title = title_search.group(1)
+        item = make_text_item(title, text)
+        news = root.get(channel).items
         news.add(item)
     except Exception as e:
         log.debug(e)
@@ -137,7 +165,7 @@ def logout():
 def new():
     return redirect('/new/main')
 
-@app.route('/new/<channel>')
+@app.route('/new/<path:channel>')
 def new_api(channel):
     return render_template('new.html', channel=channel)
 
@@ -145,17 +173,18 @@ def new_api(channel):
 def about():
     return render_template('about.html')
 
-@app.route('/recent/<channel>/atom')
+@app.route('/recent/<path:channel>/atom')
 def recent_feed(channel):
     feed = AtomFeed('Loogica News',
                     feed_url=request.url,
                     url=request.url_root)
-    items = root.get(channel).get_items()
+    items = root.get(channel).items.get_items()
     for item in items:
         try:
-            feed.add(title = item['title'].decode('utf-8'),
+            feed.add(url = "http://{}/item/{}/{}".format(request.host, channel, item['id']),
+                     title = item['title'].decode('utf-8'),
                      updated = datetime.strptime(item['posted'], DATE_FORMAT),
-                     url = item['item']['url'])
+                     text = item['item']['text'])
         except Exception as e:
             log.debug("Error {0} {1}".format(e, item['title'].encode('utf-8')))
 

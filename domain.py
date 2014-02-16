@@ -13,7 +13,7 @@ def make_url_item(title, link, owner=None):
     }
     return make_item(title, item, owner=owner)
 
-def make_text_item(title, text):
+def make_text_item(title, text, owner=None):
     item = {
         'text': text,
         'title': title
@@ -53,7 +53,7 @@ class Tree(object):
 
             tree = self.children[name]
             tree.add(full_path.replace("{}/".format(name), ""), instance)
-            return
+            return instance
 
         return instance
 
@@ -75,7 +75,7 @@ class List(object):
     def __init__(self, name):
         self.name = name
         self.items = []
-        self.index = 0
+        self.index = 1
 
     def add(self, item):
         item['id'] = self.index
@@ -89,12 +89,16 @@ class List(object):
             return found[0]
         raise Exception("Unknow/Removed item")
 
+    def find(self, item_id):
+        found = list(filter(lambda x: x['id'] == item_id, self.items))[0]
+        return found
+
     def remove(self, item_id):
         self.items = list(filter(lambda x: not x['id'] == item_id, self.items))
 
     def add_comment(self, item_id, user_id, content):
         found = list(filter(lambda x: x['id'] == item_id, self.items))[0]
-        comment = dict(id=len(found['comments']),user=user_id, content=content)
+        comment = dict(id=len(found['comments']+1),user=user_id, content=content)
         found['comments'].append(comment)
         return comment
 

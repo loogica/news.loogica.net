@@ -15,10 +15,6 @@
   <link rel="shortcut icon" href="http://loogica.net/videos/theme/img/favicon.ico" type="image/x-icon" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
   <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-    <style>
-      body { padding-top: 45px; }
-    </style>
-  <link rel="stylesheet" href="/static/css/bootstrap-responsive.min.css">
   <link rel="stylesheet" href="/static/css/font-awesome.min.css">
   <link rel="stylesheet" href="/static/css/style.css">
   <script>
@@ -27,37 +23,44 @@
   {% else %}
   var channel = "main";
   {% endif %}
+  {% if item %}
+  var item_id = {{ item }};
+  {% else %}
+  var item_id = null;
+  {% endif %}
   </script>
 </head>
 
 <body ng-controller="NewsController">
-  <div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-      <div class="container">
-        <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="brand" href="/">Loogica News</a>
-        <div class="nav-collapse collapse">
-          <ul class="nav">
-            {% raw %}
-            <li><a href="/new/{{ channel }}">Novo</a></li>
-            {% endraw %}
-            {% if auth %}
-            <li><a href="/logout"><b>Logout</b></a></li>
-            {% else %}
-            <li><a href="/user/new"><b>Criar Conta</b></a></li>
-            <li><a href="/user/login"><b>Login</b></a></li>
-            {% endif %}
-            <li><a href="/sobre"><b>Sobre</b></a></li>
-            <li><a href="{{ url_for('recent_feed', channel=channel)}}">RSS</a></li>
-          </ul>
-        </div>
-      </div>
+  <nav class="navbar navbar-default" role="navigation">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Loogica News</a>
+    </div>
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        {% raw %}
+        <li><a href="/new/{{ channel }}">Novo</a></li>
+        {% endraw %}
+        {% if auth %}
+        <li><a href="/logout"><b>Logout</b></a></li>
+        {% else %}
+        <li><a href="/user/new"><b>Criar Conta</b></a></li>
+        <li><a href="/user/login"><b>Login</b></a></li>
+        {% endif %}
+        <li><a href="/sobre"><b>Sobre</b></a></li>
+        <li><a href="{{ url_for('recent_feed', channel=channel)}}">RSS</a></li>
+      </ul>
     </div>
   </div>
+</nav>
 
   {% block main %}{% endblock %}
 

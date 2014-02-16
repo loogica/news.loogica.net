@@ -36,33 +36,46 @@ class NewsView(unittest.TestCase):
         assert 'Criar Conta' in response.data
 
     def test_post_link(self):
-        data = dict(link="http://loogica.net")
+        data = dict(title="Title", text="Specific Text")
         response = self.app.post('/api/post/main', data=data, follow_redirects=True)
         assert 200 == response.status_code
         assert 'Login' in response.data
         assert 'Criar Conta' in response.data
 
+    def test_add_channel(self):
+        response = self.app.get('/api/channel/add/main/sub')
+        assert 200 == response.status_code
+        assert "main/sub" in response.data
+
+    def test_post_link_subtopic(self):
+        data = dict(title="Title", text="Specific Text")
+        response = self.app.get('/api/channel/add/main/sub')
+        response = self.app.post('/api/post/main/sub', data=data, follow_redirects=True)
+        assert 200 == response.status_code
+        assert 'Login' in response.data
+        assert 'Criar Conta' in response.data
+
     def test_get_channel_json(self):
-        data = dict(link="http://loogica.net")
+        data = dict(title="Title", text="Specific Text")
         response = self.app.post('/api/post/main', data=data, follow_redirects=True)
         response = self.app.get('/api/news/main')
-        assert 'Iniciativa Livre' in response.data
+        assert 'Specific Text' in response.data
 
     def test_get_vote_api(self):
-        data = dict(link="http://loogica.net")
+        data = dict(title="Title", text="Specific Text")
         response = self.app.post('/api/post/main', data=data, follow_redirects=True)
         response = self.app.get('/api/news/main')
         assert '"votes": 0' in response.data
-        response = self.app.get('/api/vote/main/0')
+        response = self.app.get('/api/vote/main/1')
         assert '"votes": 1' in response.data
 
     def test_get_remove_api(self):
-        data = dict(link="http://loogica.net")
+        data = dict(title="Title", text="Specific Text")
         response = self.app.post('/api/post/main', data=data, follow_redirects=True)
         response = self.app.get('/api/news/main')
-        assert 'Iniciativa Livre' in response.data
-        response = self.app.get('/api/remove/main/0')
-        assert not 'Iniciativa Livre' in response.data
+        assert 'Specific Text' in response.data
+        response = self.app.get('/api/remove/main/1')
+        assert not 'Specific Text' in response.data
 
     def test_get_user_form(self):
         response = self.app.get('/user/new')

@@ -8,6 +8,7 @@ news.controller('NewsController',
 
         $scope.news = [];
         $scope.channel = channel;
+        $scope.item_id = item_id;
         $scope._date_sort_flag = true;
 
         var _process_items = function(items) {
@@ -18,15 +19,27 @@ news.controller('NewsController',
         };
 
         $scope.update = function() {
-            $http({
-                url: '/api/news/' + $scope.channel,
-                method: 'GET'
-            }).success(function(data, status, header, config) {
-                $scope.news = _process_items(data.items);
-                $scope.show_items = true;
-            }).error(function(data, status, header, config) {
-                alert('API ERROR');
-            });
+            if ($scope.item_id) {
+                $http({
+                    url: '/api/' + $scope.channel + '/' + $scope.item_id,
+                    method: 'GET'
+                }).success(function(data, status, header, config) {
+                    $scope.news = _process_items([data.item]);
+                    $scope.show_items = true;
+                }).error(function(data, status, header, config) {
+                    alert('API ERROR');
+                });
+            } else {
+                $http({
+                    url: '/api/news/' + $scope.channel,
+                    method: 'GET'
+                }).success(function(data, status, header, config) {
+                    $scope.news = _process_items(data.items);
+                    $scope.show_items = true;
+                }).error(function(data, status, header, config) {
+                    alert('API ERROR');
+                });
+            }
         };
 
         $scope.vote = function(item_id) {

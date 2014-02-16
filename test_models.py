@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from domain import make_url_item, List, Tree, DATE_FORMAT
+from domain import make_url_item, make_text_item, List, Tree, DATE_FORMAT
 from users import User, Realm
 
 def test_news():
@@ -49,7 +49,7 @@ def test_news():
 
     root = Tree()
     assert news == root.add('main', news)
-    assert 'main' in root.items
+    assert 'main' in root.children
 
 def test_news_comments():
     item = make_url_item('Loogica News', 'http://news.loogica.net')
@@ -102,4 +102,17 @@ def test_tree():
     root.add('main/specific/sub', items)
     assert items == root.get('main/specific/sub').items
 
+def test_tree_list():
+    root = Tree('root')
+
+    faq = List('FAQ')
+    pgto = List('PGTO')
+
+    root.add('faq', faq)
+    root.add('faq/pgto', pgto)
+
+    item = make_text_item('Title', 'Text')
+    pgto.add(item)
+
+    assert 'Title' == root.get('faq/pgto').items.items[0]['title']
 
