@@ -38,10 +38,9 @@ if six.PY3:
     users = init_persistent_system(Realm('users3'))
 else:
     root = init_persistent_system(Tree(), basedir="main")
-    root.add('main')
+    if not root.has('main'):
+        root.add('main')
     users = init_persistent_system(Realm('users'))
-
-
 
 @login_manager.user_loader
 def load_user(userid):
@@ -63,7 +62,7 @@ def channel(channel):
 
 @app.route('/item/<path:channel>/<int:pk>')
 def item(channel, pk):
-    item = root.get(channel).find(channel, pk)
+    item = root.find_item(channel, pk)
     auth = 'user_id' in session
     return render_template('loogica-item.html', item_id=pk,
                                                 item=item,
@@ -81,7 +80,7 @@ def news_channel_api(channel):
 
 @app.route('/api/<path:channel>/<int:pk>')
 def item_api(channel, pk):
-    item = root.get(channel).find(pk)
+    item = root.find_item(channel, pk)
     return jsonify(item=item)
 
 
@@ -109,8 +108,6 @@ def add_channel(channel):
 
 @app.route('/api/post/<path:channel>', methods=['POST'])
 def add_api(channel):
-    #import pytest; pytest.set_trace()
-    #import ipdb; ipdb.set_trace()
     title = request.form['title']
     text = request.form['text']
     try:

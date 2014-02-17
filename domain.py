@@ -72,6 +72,20 @@ class Tree(object):
             tree = self.children[name]
             return tree.get(full_path.replace("{}/".format(name), ""))
 
+    @readonly
+    def has(self, full_path):
+        path = full_path.split('/')
+        name = path[0]
+
+        if len(path) == 1:
+            return name in self.children
+        else:
+            if name in self.children:
+                tree = self.children[name]
+                return tree.has(full_path.replace("{}/".format(name), ""))
+            else:
+                return False
+
     def add_item(self, full_path, item):
         channel = self.get(full_path).items
         channel.add(item)
@@ -99,6 +113,7 @@ class Tree(object):
         channel = self.get(full_path).items
         return channel.del_comment(item, user, content)
 
+    @readonly
     def get_items(self, full_path):
         channel = self.get(full_path).items
         return channel.get_items()
