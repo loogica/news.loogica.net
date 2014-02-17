@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="/static/css/bootstrap.min.css">
   <link rel="stylesheet" href="/static/css/font-awesome.min.css">
   <link rel="stylesheet" href="/static/css/style.css">
+  {% block css %}{% endblock %}
   <script>
   {% if channel %}
   var channel = "{{ channel }}";
@@ -31,6 +32,7 @@
   </script>
 </head>
 
+{% block nav %}
 <body ng-controller="NewsController">
   <nav class="navbar navbar-default" role="navigation">
   <div class="container-fluid">
@@ -42,7 +44,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Loogica News</a>
+      <a class="navbar-brand" href="/">Loogica News</a>
     </div>
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
@@ -58,9 +60,16 @@
         <li><a href="/sobre"><b>Sobre</b></a></li>
         <li><a href="{{ url_for('recent_feed', channel=channel)}}">RSS</a></li>
       </ul>
+      <!--form class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form-->
     </div>
   </div>
 </nav>
+{% endblock %}
 
   {% block main %}{% endblock %}
 

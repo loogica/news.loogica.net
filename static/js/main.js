@@ -25,6 +25,7 @@ news.controller('NewsController',
                     method: 'GET'
                 }).success(function(data, status, header, config) {
                     $scope.news = _process_items([data.item]);
+                    $scope.comments = $scope.news[0].comments;
                     $scope.show_items = true;
                 }).error(function(data, status, header, config) {
                     alert('API ERROR');

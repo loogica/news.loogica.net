@@ -105,7 +105,6 @@ def add_channel(channel):
     root.add(channel, List(name))
     return jsonify(path=channel, name=name)
 
-
 @app.route('/api/post/<path:channel>', methods=['POST'])
 def add_api(channel):
     title = request.form['title']
@@ -118,6 +117,15 @@ def add_api(channel):
         return jsonify(error="Invalid Link or urlread timeout")
     return redirect(url_for('channel', channel=channel))
 
+@app.route('/api/comment/<path:channel>/<int:pk>', methods=['POST'])
+def add_comment(channel, pk):
+    content = request.form['comment']
+    user = None
+    if 'user_id' in session:
+        user = session['user_id']
+    root.add_comment(channel, pk, user, content)
+    return redirect(url_for('item', channel=channel, pk=pk))
+
 @app.route('/user/new')
 def user_form():
     post_url = '/user/create'
@@ -126,7 +134,7 @@ def user_form():
 @app.route('/user/login')
 def login_form():
     post_url = '/login'
-    return render_template('user.new.html', post_url=post_url)
+    return render_template('login.html', post_url=post_url)
 
 @app.route('/login', methods=['POST'])
 def login():

@@ -13,8 +13,27 @@
     </li>
   </ol>
   </div>
+  <div class="col-md-10 col-md-offset-1">
+  <h3>Comments</h3>
+  <ul class="newsList" ng-show="show_items">
+    <li ng-repeat="comment in comments">
+    <p>{{ comment.user }}{{ comment.content }}</p>
+    </li>
+  </ol>
   </div>
-</div>
+  </div>
 {% endraw %}
+<div class="row">
+  <div class="col-md-10 col-md-offset-1">
+  <h3>Add Comment</h3>
+  <form role="form" action="/api/comment/{{ channel }}/{{ item_id }}" method="POST">
+    <div class="form-group">
+      <textarea name="comment" class="form-control" rows="3"></textarea>
+    </div>
+    <button type="submit" class="btn">Submit</button>
+  </form>
+</div>
+</div>
+</div>
 {% endblock %}
 

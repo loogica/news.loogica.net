@@ -1,14 +1,16 @@
 {% extends "base.html" %}
 {% block main %}
 <div class="container">
-    <form action="{{ post_url }}" method="POST">
-    <fieldset>
-      <legend>Username</legend>
-      <input type="text" name="username" placeholder="Username">
-      <legend>Password</legend>
-      <input type="password" name="password" placeholder="password">
-      <button type="submit" class="btn">Submit</button>
-    </fieldset>
+    <form action="{{ post_url }}" role="form" method="post">
+    <div class="form-group">
+      <label for="user">Username</label>
+      <input type="text" name ="username" class="form-control" id="user">
+    </div>
+    <div class="form-group">
+      <label for="pass">Password</label>
+      <input type="password" name="password" class="form-control" rows="3" id="pass">
+    </div>
+    <button type="submit" class="btn">Submit</button>
   </form>
 </div>
 {% endblock %}
