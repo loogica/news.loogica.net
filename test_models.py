@@ -14,7 +14,7 @@ def test_news():
     with pytest.raises(Exception):
         news.vote(10)
 
-    assert item == news.vote(0)
+    assert item == news.vote(1)
     assert 1 == news.items[0]['votes']
 
     new_item = make_url_item('New Video', 'http://loogica.net/videos', owner='tester')
@@ -23,12 +23,12 @@ def test_news():
     assert None == news.items[0]['owner']
     assert 'tester' == news.items[1]['owner']
 
-    assert new_item == news.vote(1)
+    assert new_item == news.vote(2)
     assert 1 == news.items[1]['votes']
-    assert new_item == news.vote(1)
+    assert new_item == news.vote(2)
     assert 2 == news.items[1]['votes']
 
-    news.remove(0)
+    news.remove(1)
     assert 1 == len(news.items)
     assert 2 == news.items[0]['votes']
 
@@ -59,10 +59,10 @@ def test_news_comments():
     assert 1 == len(news.items)
     assert 0 == len(news.items[0]['comments'])
 
-    news.add_comment(0, 1, 'positive comment')
+    news.add_comment(1, 1, 'positive comment')
     assert 1 == len(news.items[0]['comments'])
 
-    news.del_comment(0, 0)
+    news.del_comment(1, 1)
     assert 0 == len(news.items[0]['comments'])
 
 def test_user():
@@ -84,35 +84,26 @@ def test_tree():
     assert 0 == len(root.children)
     assert 'root' == root.name
 
-    main = List('main')
-    root.add('main', main)
+    root.add('main')
     assert 1 == len(root.children)
-    assert main == root.get('main').items
 
-    specific = List('specific')
-    root.add('main/specific', specific)
+    root.add('main/specific')
     assert 1 == len(root.children)
     assert 1 == len(root.children['main'].children)
-    assert specific == root.get('main/specific').items
 
     assert Tree('specific') == root.children['main'].children['specific']
     assert Tree('specific') == root.get('main/specific')
 
-    items = List('sub')
-    root.add('main/specific/sub', items)
-    assert items == root.get('main/specific/sub').items
+    root.add('main/specific/sub')
+    assert isinstance(root.get('main/specific/sub').items, List)
 
 def test_tree_list():
     root = Tree('root')
-
-    faq = List('FAQ')
-    pgto = List('PGTO')
-
-    root.add('faq', faq)
-    root.add('faq/pgto', pgto)
+    root.add('faq')
+    root.add('faq/pgto')
 
     item = make_text_item('Title', 'Text')
-    pgto.add(item)
+    root.add_item('faq/pgto', item)
 
     assert 'Title' == root.get('faq/pgto').items.items[0]['title']
 

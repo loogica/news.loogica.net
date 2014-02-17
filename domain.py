@@ -38,9 +38,14 @@ class Tree(object):
         self.children = {}
         self.items = None
 
-    def add(self, full_path, instance):
+    def add(self, full_path, obj=None):
         path = full_path.split('/')
         name = path[0]
+
+        if not obj:
+            instance = List(full_path)
+        else:
+            instance = obj
 
         if len(path) == 1:
             tree = Tree(name)
@@ -52,7 +57,7 @@ class Tree(object):
                 self.children[name] = Tree(name)
 
             tree = self.children[name]
-            tree.add(full_path.replace("{}/".format(name), ""), instance)
+            tree.add(full_path.replace("{}/".format(name), ""), obj=instance)
             return instance
 
         return instance
@@ -66,6 +71,37 @@ class Tree(object):
         else:
             tree = self.children[name]
             return tree.get(full_path.replace("{}/".format(name), ""))
+
+    def add_item(self, full_path, item):
+        channel = self.get(full_path).items
+        channel.add(item)
+        return item
+
+    def remove_item(self, full_path, item):
+        channel = self.get(full_path).items
+        channel.remove(item)
+        return item
+
+    @readonly
+    def find_item(self, full_path, item):
+        channel = self.get(full_path).items
+        return channel.find(item)
+
+    def add_vote(self, full_path, item):
+        channel = self.get(full_path).items
+        return channel.vote(item)
+
+    def add_comment(self, full_path, item, user, content):
+        channel = self.get(full_path).items
+        return channel.add_comment(item, user, content)
+
+    def del_comment(self, full_path, item, comment_id):
+        channel = self.get(full_path).items
+        return channel.del_comment(item, user, content)
+
+    def get_items(self, full_path):
+        channel = self.get(full_path).items
+        return channel.get_items()
 
     def __eq__(self, other):
         return self.name == other.name
@@ -82,6 +118,13 @@ class List(object):
         self.items.append(item)
         self.index += 1
 
+    def remove(self, item_id):
+        self.items = list(filter(lambda x: not x['id'] == item_id, self.items))
+
+    def find(self, item_id):
+        found = list(filter(lambda x: x['id'] == item_id, self.items))[0]
+        return found
+
     def vote(self, item_id):
         found = list(filter(lambda x: x['id'] == item_id, self.items))
         if found:
@@ -89,16 +132,9 @@ class List(object):
             return found[0]
         raise Exception("Unknow/Removed item")
 
-    def find(self, item_id):
-        found = list(filter(lambda x: x['id'] == item_id, self.items))[0]
-        return found
-
-    def remove(self, item_id):
-        self.items = list(filter(lambda x: not x['id'] == item_id, self.items))
-
     def add_comment(self, item_id, user_id, content):
         found = list(filter(lambda x: x['id'] == item_id, self.items))[0]
-        comment = dict(id=len(found['comments']+1),user=user_id, content=content)
+        comment = dict(id=len(found['comments']) + 1,user=user_id, content=content)
         found['comments'].append(comment)
         return comment
 
@@ -108,11 +144,9 @@ class List(object):
         found['comments'].remove(comment)
         return comment
 
-    @readonly
     def get_items(self):
         return sorted(self.items, key=lambda item: item['votes'], reverse=True)[:10]
 
-    @readonly
     def get_user_items(self, user_id):
         return sorted(filter(lambda x: x['owner'] == user_id, self.items),
                       key=lambda item: datetime.strptime(item['posted'], DATE_FORMAT))

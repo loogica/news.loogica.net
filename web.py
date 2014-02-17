@@ -34,11 +34,11 @@ login_manager.init_app(app)
 users = None
 if six.PY3:
     root = init_persistent_system(Tree(), basedir="main3")
-    root.add('main', List('main3'))
+    root.add('main')
     users = init_persistent_system(Realm('users3'))
 else:
     root = init_persistent_system(Tree(), basedir="main")
-    root.add('main', List('main'))
+    root.add('main')
     users = init_persistent_system(Realm('users'))
 
 
@@ -57,17 +57,16 @@ def main():
 
 @app.route('/c/<path:channel>')
 def channel(channel):
-    news = root.get(channel)
     auth = 'user_id' in session
     return render_template('loogica-news.html', channel=channel,
                                                 auth=auth)
 
 @app.route('/item/<path:channel>/<int:pk>')
 def item(channel, pk):
-    news = root.get(channel).items
-    item = news.find(pk)
+    item = root.get(channel).find(channel, pk)
     auth = 'user_id' in session
-    return render_template('loogica-item.html', item=pk,
+    return render_template('loogica-item.html', item_id=pk,
+                                                item=item,
                                                 channel=channel,
                                                 auth=auth)
 
@@ -75,15 +74,14 @@ def item(channel, pk):
 def news_channel_api(channel):
     try:
         return jsonify(channel=channel,
-                       items=root.get(channel).items.get_items())
+                       items=root.get_items(channel))
     except Exception as e:
         log.error(e)
         return jsonify(msg="Invalid Channel")
 
 @app.route('/api/<path:channel>/<int:pk>')
 def item_api(channel, pk):
-    news = root.get(channel).items
-    item = news.find(pk)
+    item = root.get(channel).find(pk)
     return jsonify(item=item)
 
 
@@ -116,14 +114,8 @@ def add_api(channel):
     title = request.form['title']
     text = request.form['text']
     try:
-        #data = urlopen(link, timeout=10).read()
-        #if six.PY3:
-        #    data = data.decode('utf-8')
-        #title_search = re.search('<title>(\n*.*\n*)</title>', data, re.IGNORECASE)
-        #title = title_search.group(1)
         item = make_text_item(title, text)
-        news = root.get(channel).items
-        news.add(item)
+        root.add_item(channel, item)
     except Exception as e:
         log.debug(e)
         return jsonify(error="Invalid Link or urlread timeout")
