@@ -15,7 +15,7 @@ from flask import (Flask, request, redirect, render_template, jsonify, session,
 from flask.ext.login import LoginManager, login_user, logout_user
 from werkzeug.contrib.atom import AtomFeed
 
-from decouple import Config
+from decouple import ConfigIni
 
 from domain import make_text_item, List, Tree, DATE_FORMAT
 from users import User, Realm, UserWrapper
@@ -23,7 +23,7 @@ from users import User, Realm, UserWrapper
 import logging
 log = logging.getLogger(__name__)
 
-config = Config('settings.ini')
+config = ConfigIni('settings.ini')
 app = Flask(__name__)
 app.secret_key = config('SECRET_KEY').encode('utf-8')
 app.logger.addHandler(logging.StreamHandler())
@@ -187,6 +187,7 @@ def recent_feed(channel):
 
     return feed.get_response()
 
-application = app
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    DEBUG = config('DEBUG') in ('True', 1)
+    app.run(debug=DEBUG)
