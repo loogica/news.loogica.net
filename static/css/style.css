@@ -40,6 +40,11 @@ a:hover { color: #D04526; }
     display: inline-block;
 }
 
+.comments {
+    min-width: 2.5em;
+    display: inline-block;
+}
+
 
 /* Large desktop */
 @media (min-width: 1200px) { ... }
