@@ -187,6 +187,7 @@ def recent_feed(channel):
 
     return feed.get_response()
 
+application = app
 
 if __name__ == "__main__":
     DEBUG = config('DEBUG') in ('True', 1)
