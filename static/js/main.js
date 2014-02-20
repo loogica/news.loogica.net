@@ -10,6 +10,7 @@ news.controller('NewsController',
         $scope.channel = channel;
         $scope.item_id = item_id;
         $scope._date_sort_flag = true;
+        $scope._comment_sort_flag = true;
 
         var _process_items = function(items) {
             _.each(items, function(item) {
@@ -75,6 +76,18 @@ news.controller('NewsController',
                 $scope.news = items;
             }
             $scope._date_sort_flag = !$scope._date_sort_flag;
+        };
+
+        $scope.sort_comments = function() {
+             var items = _.sortBy($scope.news, function(element) {
+                return element.comments.length;
+            });
+            if ($scope._comment_sort_flag) {
+                $scope.news = items.reverse();
+            } else {
+                $scope.news = items;
+            }
+            $scope._comment_sort_flag = !$scope._comment_sort_flag;
         };
 
         $scope.open = function(channel) {

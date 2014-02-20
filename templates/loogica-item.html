@@ -8,7 +8,9 @@
     <li ng-repeat="info in news">
       <h1>{{ info.item.title }}</h1>
       <p>{{ info.item.text }}</p>
-      <p><i class="rankNumber">+{{ info.votes }}</i> <a class="promote" href="#" ng-click="vote(info.id)"><i class="icon-chevron-up"> Promover</i></a>
+      <p><i class="rankNumber">+{{ info.votes }}</i>
+      <a class="comments" href="#" ng-click="sort_comments()"><i class="icon-comments"></i> {{ info.comments.length }}</a>
+      <a class="promote" href="#" ng-click="vote(info.id)"><i class="icon-chevron-up"> Promover</i></a>
       <i class="icon-time"></i> <a href="#" ng-click="sort_date()">{{ moment(info.posted).startOf('hour').fromNow() }}</a>  <i class="icon-trash"><a href="#" ng-click="remove(info.id)"> Apagar</a></i></p>
     </li>
   </ol>
@@ -17,7 +19,7 @@
   <h3>Comments</h3>
   <ul class="newsList" ng-show="show_items">
     <li ng-repeat="comment in comments">
-    <p>{{ comment.user }}{{ comment.content }}</p>
+    <p><span ng-if="comment.user">{{ comment.user }} - </span>{{ comment.content }}</p>
     </li>
   </ol>
   </div>
