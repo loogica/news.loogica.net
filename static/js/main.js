@@ -48,6 +48,7 @@ news.controller('NewsController',
             $http({
                 url: '/api/vote/' + $scope.channel + '/' + item_id,
                 method: 'POST',
+                headers: {'Content-Type': 'application/json'},
                 data: {vote: num}
             }).success(function(data, status, header, config) {
                 $scope.news = _process_items(data.items);
