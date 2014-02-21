@@ -15,7 +15,10 @@ from flask import (Flask, request, redirect, render_template, jsonify, session,
 from flask.ext.login import LoginManager, login_user, logout_user
 from werkzeug.contrib.atom import AtomFeed
 
-from decouple import ConfigIni
+try:
+    from decouple import ConfigIni
+except:
+    from decouple import Config as ConfigIni
 
 from domain import make_text_item, List, Tree, DATE_FORMAT
 from users import User, Realm, UserWrapper
