@@ -44,10 +44,11 @@ news.controller('NewsController',
             }
         };
 
-        $scope.vote = function(item_id) {
+        $scope.vote = function(item_id, num) {
             $http({
                 url: '/api/vote/' + $scope.channel + '/' + item_id,
-                method: 'GET'
+                method: 'POST',
+                data: {vote: num}
             }).success(function(data, status, header, config) {
                 $scope.news = _process_items(data.items);
             }).error(function(data, status, header, config) {

@@ -84,13 +84,12 @@ def item_api(channel, pk):
     return jsonify(item=item)
 
 
-@app.route('/api/vote/<path:channel>/<item_id>')
+@app.route('/api/vote/<path:channel>/<int:item_id>', methods=['POST'])
 def vote_api(item_id, channel):
-    item_id = int(item_id)
-    news = root.get(channel).items
-    news.vote(item_id)
+    vote = int(request.json['vote'])
+    root.add_vote(channel, item_id, vote)
     return jsonify(channel=channel,
-                   items=news.get_items())
+                   items=root.get_items(channel))
 
 @app.route('/api/remove/<path:channel>/<item_id>')
 def remove_api(item_id, channel):

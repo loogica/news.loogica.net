@@ -101,9 +101,9 @@ class Tree(object):
         channel = self.get(full_path).items
         return channel.find(item)
 
-    def add_vote(self, full_path, item):
+    def add_vote(self, full_path, item, vote):
         channel = self.get(full_path).items
-        return channel.vote(item)
+        return channel.vote(item, vote)
 
     def add_comment(self, full_path, item, user, content):
         channel = self.get(full_path).items
@@ -140,10 +140,10 @@ class List(object):
         found = list(filter(lambda x: x['id'] == item_id, self.items))[0]
         return found
 
-    def vote(self, item_id):
+    def vote(self, item_id, vote):
         found = list(filter(lambda x: x['id'] == item_id, self.items))
         if found:
-            found[0]['votes'] += 1
+            found[0]['votes'] += vote
             return found[0]
         raise Exception("Unknow/Removed item")
 

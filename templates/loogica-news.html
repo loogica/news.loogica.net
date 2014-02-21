@@ -4,16 +4,17 @@
 <div class="container" style="display:none;" ng-cloak ng-show="show_items">
 <div class="row">
   <div class="col-md-12">
-  <ol class="newsList" ng-show="show_items">
+  <ul class="newsList" ng-show="show_items">
     <li ng-repeat="info in news">
     <h1><a href="/item/{{ channel }}/{{ info.id }}">{{ info.item.title }}</a></h1>
       <p>{{ info.item.text }}</p>
       <p><i class="rankNumber">+{{ info.votes }}</i>
       <a class="comments" href="#" ng-click="sort_comments()"><i class="icon-comments"></i> {{ info.comments.length }}</a>
-      <a class="promote" href="#" ng-click="vote(info.id)"><i class="icon-chevron-up"> Promover</i></a>
+      <a class="promote" href="#" ng-click="vote(info.id, 1)"><i class="icon-chevron-up"> Promover</i></a>
+      <a class="promote" href="#" ng-click="vote(info.id, -1)"><i class="icon-chevron-down"> Despromover</i></a>
       <i class="icon-time"></i> <a href="#" ng-click="sort_date()">{{ moment(info.posted).startOf('hour').fromNow() }}</a>  <i class="icon-trash"><a href="#" ng-click="remove(info.id)"> Apagar</a></i></p>
     </li>
-  </ol>
+  </ul>
   </div>
   </div>
 </div>

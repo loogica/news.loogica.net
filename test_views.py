@@ -1,3 +1,4 @@
+import json
 import os
 import shutil
 import unittest
@@ -66,8 +67,11 @@ class NewsView(unittest.TestCase):
         response = self.app.post('/api/post/main', data=data, follow_redirects=True)
         response = self.app.get('/api/news/main')
         assert '"votes": 0' in response.data
-        response = self.app.get('/api/vote/main/1')
+        response = self.app.post('/api/vote/main/1', data=json.dumps(dict(vote=1)), content_type="application/json")
         assert '"votes": 1' in response.data
+        response = self.app.post('/api/vote/main/1', data=json.dumps(dict(vote=-1)), content_type="application/json")
+        assert not '"votes": 1' in response.data
+        assert '"votes": 0' in response.data
 
     def test_get_remove_api(self):
         data = dict(title="Title", text="Specific Text")

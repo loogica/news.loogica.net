@@ -14,8 +14,10 @@ def test_news():
     with pytest.raises(Exception):
         news.vote(10)
 
-    assert item == news.vote(1)
+    assert item == news.vote(1, 1)
     assert 1 == news.items[0]['votes']
+    assert item == news.vote(1, -1)
+    assert 0 == news.items[0]['votes']
 
     new_item = make_url_item('New Video', 'http://loogica.net/videos', owner='tester')
     news.add(new_item)
@@ -23,9 +25,9 @@ def test_news():
     assert None == news.items[0]['owner']
     assert 'tester' == news.items[1]['owner']
 
-    assert new_item == news.vote(2)
+    assert new_item == news.vote(2, 1)
     assert 1 == news.items[1]['votes']
-    assert new_item == news.vote(2)
+    assert new_item == news.vote(2, 1)
     assert 2 == news.items[1]['votes']
 
     news.remove(1)
